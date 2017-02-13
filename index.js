@@ -3,6 +3,7 @@
 let express = require('express');
 let request = require('request');
 let fs = require('fs');
+//const spawn = require('child_process').spawn;
 
 let Transcoder = require('stream-transcoder');
 
@@ -34,8 +35,8 @@ app.get('/', (req, res) => {
 
 
 
-/* Utiliser peut-être un truc dans le genre pour passer en mp4
-
+// test for convert in mp4
+/*
 var input_file = fs.createReadStream('sample_upload.mp4');
 input_file.on('error', function(err) {
     console.log(err);
@@ -63,8 +64,8 @@ ffmpeg.stderr.on('exit', function () {
 ffmpeg.stderr.on('close', function() {
     console.log('...closing time! bye');
 });
-
 */
+
 
 
 
