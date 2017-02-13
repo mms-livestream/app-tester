@@ -11,7 +11,7 @@ let server = app.listen(2500, "0.0.0.0");
 
 
 let protocol = "http"
-let targetAddr = "192.168.100.35";
+let targetAddr = "192.168.0.25";
 let targetPort = 8080;
 
 //test with read file stream
@@ -30,6 +30,41 @@ app.get('/', (req, res) => {
 
   //res.send(200);
 });
+
+
+
+
+/* Utiliser peut-être un truc dans le genre pour passer en mp4
+
+var input_file = fs.createReadStream('sample_upload.mp4');
+input_file.on('error', function(err) {
+    console.log(err);
+});
+
+var output_path = 'tmp/output.mp4';
+var output_stream = fs.createWriteStream('tmp/output.mp4');
+
+var ffmpeg = child_process.spawn('ffmpeg', ['-i', 'pipe:0', '-f', 'mp4', '-movflags', 'frag_keyframe', 'pipe:1']);
+input_file.pipe(ffmpeg.stdin);
+ffmpeg.stdout.pipe(output_stream);
+
+ffmpeg.stderr.on('data', function (data) {
+    console.log(data.toString());
+});
+
+ffmpeg.stderr.on('end', function () {
+    console.log('file has been converted succesfully');
+});
+
+ffmpeg.stderr.on('exit', function () {
+    console.log('child process exited');
+});
+
+ffmpeg.stderr.on('close', function() {
+    console.log('...closing time! bye');
+});
+
+*/
 
 
 
