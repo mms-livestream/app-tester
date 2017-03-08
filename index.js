@@ -11,7 +11,7 @@ let server = app.listen(2500, "0.0.0.0");
 
 
 let protocol = "http"
-let targetAddr = "192.168.100.35";
+let targetAddr = "192.168.1.121";
 let targetPort = 8080;
 
 //test with read file stream
@@ -22,10 +22,10 @@ app.get('/sample', (req, res) => {
 //main test
 app.get('/', (req, res) => {
   //stream in browser
-  //request(`${protocol}://${targetAddr}:${targetPort}/video`).pipe(fs.createWriteStream(res));
+  request(`${protocol}://${targetAddr}:${targetPort}/video`).pipe(res);
 
   //write file
-  request(`${protocol}://${targetAddr}:${targetPort}/video`).pipe(fs.createWriteStream('test.mpg'));  //todo: test if without end:true ok
+  //request(`${protocol}://${targetAddr}:${targetPort}/video`).pipe(fs.createWriteStream('test.mpg'));  //todo: test if without end:true ok
   //format is .mpg, convert it to mp4 : ffmpeg -i test.mpg video.mp4
 
   //res.send(200);
