@@ -6,52 +6,50 @@ let express = require('express');
 let request = require('request');
 let fs = require('fs');
 
+let core = require('mms-core');
+
 let app = express();
 let server = app.listen(2500, "0.0.0.0");	//entry port
 
-let protocol = "http";
-let targetAddr = "192.168.1.121";
-//let targetAddr = "192.168.0.25";
-let targetPort = 8080;
+let webcamAddr = "192.168.1.121";
+let webcamPort = 8080;
 
 app.get('/', (req, res) => {
 
-  //--Metadata to manager
+    //Metadata to Manager
 
-  //Data JSON : hardcoded
-  var data = querystring.stringify({
-      'title' : 'ADVANCED_OPTIMIZATIONS',
-      'author' : 'hello',
-      'tags': 'json'
-  });
+    let destHost = core.dConfig["NODE_METADATA_MANAGER"].server.host;  //jshint ignore:line
+    let destPort = core.dConfig["NODE_METADATA_MANAGER"].server.port;  //jshint ignore:line
 
-  //Options
-  var post_options = {
-      host: 'localhost',
-      port: '2502',
-      path: '/metadata',
+    let data = {"data": {"id_uploader":1, "title":"TestVideo", "tags":["test", "enseirb"]}};
+
+    let options = {
+      url: `http://${destHost}:${destPort}/api/metadata`,
       method: 'POST',
+      json: true,
       headers: {
-          'Content-Type': 'application/x-www-form-urlencoded',
-          'Content-Length': Buffer.byteLength(post_data)
-      }
-  };
+          'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(data)
+    };
 
-  //Do request
-  var post_req = http.request(post_options, function(res) {
-      res.setEncoding('utf8');
-      res.on('data', function (chunk) {
-          console.log('Response: ' + chunk);
-      });
-  });
+    //Do request
+    request(options, function(err, res) {
+        if (!err && res.statusCode === 200) {
+            console.log("OK sent");
+        }
+        else {
+            console.log("Error:" + err);
+        }
+    });
 
-  //--Video to transcoder
+  //Video to Transcoder
 
   //Options : transcoder
-  let destTranscoder = "http://localhost:2501";
+  let destTranscoder = `http://${core.dConfig["NODE_TRANSCODER"].server.host}:${core.dConfig["NODE_TRANSCODER"].server.port}/api/metadata`;     //jshint ignore:line
 
   //Do request
-  request(`${protocol}://${targetAddr}:${targetPort}/video`).pipe(request.post(destTranscoder));
+  request(`http://${webcamAddr}:${webcamPort}/video`).pipe(request.post(destTranscoder));
 
 });
 
