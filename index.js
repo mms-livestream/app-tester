@@ -18,11 +18,10 @@ app.get('/', (req, res) => {
 
     //Metadata to Manager
 
+    //Options
     let destHost = core.dConfig["NODE_METADATA_MANAGER"].server.host;  //jshint ignore:line
     let destPort = core.dConfig["NODE_METADATA_MANAGER"].server.port;  //jshint ignore:line
-
     let data = {"data": {"id_uploader":1, "title":"TestVideo", "tags":["test", "enseirb"]}};
-
     let options = {
       url: `http://${destHost}:${destPort}/api/metadata`,
       method: 'POST',
@@ -30,7 +29,7 @@ app.get('/', (req, res) => {
       headers: {
           'Content-Type': 'application/json'
       },
-      body: JSON.stringify(data)
+      body: data
     };
 
     //Do request
@@ -45,10 +44,10 @@ app.get('/', (req, res) => {
 
   //Video to Transcoder
 
-  //Options : transcoder
+  //Options
   let destTranscoder = `http://${core.dConfig["NODE_TRANSCODER"].server.host}:${core.dConfig["NODE_TRANSCODER"].server.port}/api/metadata`;     //jshint ignore:line
 
   //Do request
-  request(`http://${webcamAddr}:${webcamPort}/video`).pipe(request.post(destTranscoder));
+  //request(`http://${webcamAddr}:${webcamPort}/video`).pipe(request.post(destTranscoder));
 
 });
