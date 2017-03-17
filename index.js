@@ -23,10 +23,10 @@ app.get('/sample', (req, res) => {
 //main test
 app.get('/', (req, res) => {
   //stream in browser
-  //request(`${protocol}://${targetAddr}:${targetPort}/video`).pipe(res);
+  request(`${protocol}://${targetAddr}:${targetPort}/video`).pipe(res);
 
   //write file
-  request(`${protocol}://${targetAddr}:${targetPort}/video`).pipe(fs.createWriteStream('test.mpg'));  //todo: test if without end:true ok
+  //request(`${protocol}://${targetAddr}:${targetPort}/video`).pipe(fs.createWriteStream('test.mpg'));  //todo: test if without end:true ok
   //format is .mpg, convert it to mp4 : ffmpeg -i test.mpg video.mp4
 
   //res.send(200);
