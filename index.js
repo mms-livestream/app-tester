@@ -1,35 +1,67 @@
-"use strict"
+/*jslint node: true */
+/*jshint esversion: 6 */
+'use strict';
 
 let express = require('express');
 let request = require('request');
 let fs = require('fs');
-//const spawn = require('child_process').spawn;
-
-let Transcoder = require('stream-transcoder');
 
 let app = express();
-let server = app.listen(2500, "0.0.0.0");
+let server = app.listen(2500, "0.0.0.0");	//entry port
 
-
-let protocol = "http"
-let targetAddr = "192.168.0.25";
+let protocol = "http";
+let targetAddr = "192.168.1.121";
+//let targetAddr = "192.168.0.25";
 let targetPort = 8080;
 
-//test with read file stream
-app.get('/sample', (req, res) => {
-  fs.createReadStream('sample_upload.mp4').pipe(res);
-});
-
-//main test
 app.get('/', (req, res) => {
+<<<<<<< HEAD
   //stream in browser
   request(`${protocol}://${targetAddr}:${targetPort}/video`).pipe(res);
 
   //write file
   //request(`${protocol}://${targetAddr}:${targetPort}/video`).pipe(fs.createWriteStream('test.mpg'));  //todo: test if without end:true ok
   //format is .mpg, convert it to mp4 : ffmpeg -i test.mpg video.mp4
+=======
 
-  //res.send(200);
+  //--Metadata to manager
+
+  //Data JSON : hardcoded
+  var data = querystring.stringify({
+      'title' : 'ADVANCED_OPTIMIZATIONS',
+      'author' : 'hello',
+      'tags': 'json'
+  });
+
+  //Options
+  var post_options = {
+      host: 'localhost',
+      port: '2502',
+      path: '/metadata',
+      method: 'POST',
+      headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+          'Content-Length': Buffer.byteLength(post_data)
+      }
+  };
+
+  //Do request
+  var post_req = http.request(post_options, function(res) {
+      res.setEncoding('utf8');
+      res.on('data', function (chunk) {
+          console.log('Response: ' + chunk);
+      });
+  });
+
+  //--Video to transcoder
+
+  //Options : transcoder
+  let destTranscoder = "http://localhost:2501";
+
+  //Do request
+  request(`${protocol}://${targetAddr}:${targetPort}/video`).pipe(request.post(destTranscoder));
+>>>>>>> 9b0006fe5b9f34e53bc98b4bd6fb820833caaf34
+
 });
 
 
@@ -37,6 +69,22 @@ app.get('/', (req, res) => {
 
 // test for convert in mp4
 /*
+
+
+//stream in browser
+request(`${protocol}://${targetAddr}:${targetPort}/video`).pipe(res);
+
+//write file
+//request(`${protocol}://${targetAddr}:${targetPort}/video`).pipe(fs.createWriteStream('test.mpg'));  //todo: test if without end:true ok
+//format is .mpg, convert it to mp4 : ffmpeg -i test.mpg video.mp4
+
+//res.send(200);
+
+//test with read file stream
+app.get('/sample', (req, res) => {
+  fs.createReadStream('sample_upload.mp4').pipe(res);
+});
+
 var input_file = fs.createReadStream('sample_upload.mp4');
 input_file.on('error', function(err) {
     console.log(err);
