@@ -11,10 +11,11 @@ let core = require('mms-core');
 let app = express();
 let server = app.listen(2500, "0.0.0.0");	//entry port
 
-let webcamAddr = "192.168.2.118";
+let webcamAddr = ["192.168.2.118"];
 let webcamPort = 8080;
-let contentId =['1','2'];
-
+let contentId =['1'];
+let destTranscoder=[`http://${core.dConfig["NODE_TRANSCODER1"].server.host}:${core.dConfig["NODE_TRANSCODER1"].server.port}/api/video`, `http://${core.dConfig["NODE_TRANSCODER2"].server.host}:${core.dConfig["NODE_TRANSCODER2"].server.port}/api/video`, `http://${core.dConfig["NODE_TRANSCODER3"].server.host}:${core.dConfig["NODE_TRANSCODER2"].server.port}/api/video`];
+let destTranscoderAlarm= {};
 //Metadata to Manager
 
 //Options
@@ -53,23 +54,28 @@ request(`http://${webcamAddr}:${webcamPort}/video`).pipe(request.post(destTransc
 });*/
 
 //Options
-let destTranscoder = `http://${core.dConfig["NODE_TRANSCODER"].server.host}:${core.dConfig["NODE_TRANSCODER"].server.port}/api/video`;     //jshint ignore:line
-let destTranscoderAlarm1 = `http://${core.dConfig["NODE_TRANSCODER"].server.host}:8088/api/video/` + contentId[0];
-let destTranscoderAlarm2 = `http://${core.dConfig["NODE_TRANSCODER"].server.host}:8088/api/video/` + contentId[1];
 
-//Do request
+for(let i = 0; i < contentId.length; i++){
+        destTranscoderAlarm[i] = `http://${core.dConfig["NODE_TRANSCODER"].server.host}:8088/api/video/` + contentId[i];
+     }
 
-console.log(contentId[0], contentId[1]);
+
+for(let i = 0; i < contentId.length; i++){
+        console.log(contentId[0]);
+     }
+
 
 function function1() {
-    request.post(destTranscoderAlarm1);
-    request.post(destTranscoderAlarm2);
+     for(let i = 0; i < contentId.length; i++){
+        request.post(destTranscoderAlarm[i]);
+     }
 }
 
 function function2() {
     // all the stuff you want to happen after that pause
-    request(`http://${webcamAddr}:${webcamPort}/video`).pipe(request.post(destTranscoder));
-    request(`http://${webcamAddr}:${webcamPort}/video`).pipe(request.post(destTranscoder));
+    for(let i = 0; i < contentId.length; i++){
+    request(`http://${webcamAddr[i]}:${webcamPort}/video`).pipe(request.post(destTranscoder[i]));
+    }
 }
 
 // call the first chunk of code right away
