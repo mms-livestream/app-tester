@@ -5,15 +5,16 @@
 let express = require('express');
 let request = require('request');
 let fs = require('fs');
+let http = require('http');
 
 let core = require('mms-core');
 
 let app = express();
 let server = app.listen(2500, "0.0.0.0");	//entry port
 
-let webcamAddr = ["192.168.2.118"];
+let webcamAddr = ["192.168.2.118","192.168.2.118"];
 let webcamPort = 8080;
-let contentId =['1'];
+let contentId =['1', '2'];
 let destTranscoder=[`http://${core.dConfig["NODE_TRANSCODER1"].server.host}:${core.dConfig["NODE_TRANSCODER1"].server.port}/api/video`, `http://${core.dConfig["NODE_TRANSCODER2"].server.host}:${core.dConfig["NODE_TRANSCODER2"].server.port}/api/video`, `http://${core.dConfig["NODE_TRANSCODER3"].server.host}:${core.dConfig["NODE_TRANSCODER2"].server.port}/api/video`];
 let destTranscoderAlarm= {};
 //Metadata to Manager
@@ -74,14 +75,14 @@ function function1() {
 function function2() {
     // all the stuff you want to happen after that pause
     for(let i = 0; i < contentId.length; i++){
-    request(`http://${webcamAddr[i]}:${webcamPort}/video`).pipe(request.post(destTranscoder[i]));
+    var req = request(`http://${webcamAddr[i]}:${webcamPort}/video`).pipe(request.post(destTranscoder[i]));
     }
 }
 
 // call the first chunk of code right away
 function1();
 
-// call the rest of the code and have it execute after 3 seconds
+// call the rest of the code and have it execute after 1 seconds
 setTimeout(function2, 1000);
 
 
