@@ -1,27 +1,34 @@
 /*jslint node: true */
 /*jshint esversion: 6 */
-'use strict';
+"use strict";
 
-let express = require('express');
-let request = require('request');
-let fs = require('fs');
-let http = require('http');
+let express = require("express");
+let request = require("request");
+let fs = require("fs");
+let http = require("http");
 
-let core = require('mms-core');
+let core = require("mms-core");
 
 let app = express();
-let server = app.listen(2500, "0.0.0.0");	//entry port
+let server = app.listen(2500, "0.0.0.0"); //entry port
+server.setTimeout = 100000000;
 
-let webcamAddr = ["192.168.2.118","192.168.2.118"];
+let webcamAddr = ["192.168.0.25"];
 let webcamPort = 8080;
-let contentId =['1', '2'];
-let destTranscoder=[`http://${core.dConfig["NODE_TRANSCODER1"].server.host}:${core.dConfig["NODE_TRANSCODER1"].server.port}/api/video`, `http://${core.dConfig["NODE_TRANSCODER2"].server.host}:${core.dConfig["NODE_TRANSCODER2"].server.port}/api/video`, `http://${core.dConfig["NODE_TRANSCODER3"].server.host}:${core.dConfig["NODE_TRANSCODER2"].server.port}/api/video`];
-let destTranscoderAlarm= {};
+let contentId = ["1"];
+let destTranscoder = [
+  `http://${core.dConfig["NODE_TRANSCODER1"].server.host}:${core.dConfig["NODE_TRANSCODER1"].server.port}/api/video`,
+  `http://${core.dConfig["NODE_TRANSCODER2"].server.host}:${core.dConfig["NODE_TRANSCODER2"].server.port}/api/video`,
+  `http://${core.dConfig["NODE_TRANSCODER3"].server.host}:${core.dConfig["NODE_TRANSCODER2"].server.port}/api/video`
+];
+let destTranscoderAlarm = {};
+
+
 //Metadata to Manager
 
 //Options
-let destHost = core.dConfig["NODE_METADATA_MANAGER"].server.host;  //jshint ignore:line
-let destPort = core.dConfig["NODE_METADATA_MANAGER"].server.port;  //jshint ignore:line
+let destHost = core.dConfig["NODE_METADATA_MANAGER"].server.host; //jshint ignore:line
+let destPort = core.dConfig["NODE_METADATA_MANAGER"].server.port; //jshint ignore:line
 // let data = {"data": {"id_uploader":1, "title":"TestVideo", "tags":["test", "enseirb"]}};
 // let options = {
 //   url: `http://${destHost}:${destPort}/api/metadata`,
@@ -56,35 +63,81 @@ request(`http://${webcamAddr}:${webcamPort}/video`).pipe(request.post(destTransc
 
 //Options
 
-for(let i = 0; i < contentId.length; i++){
-        destTranscoderAlarm[i] = `http://${core.dConfig["NODE_TRANSCODER"].server.host}:8088/api/video/` + contentId[i];
-     }
 
 
-for(let i = 0; i < contentId.length; i++){
-        console.log(contentId[0]);
-     }
+for (let i = 0; i < contentId.length; i++) {
+  destTranscoderAlarm[
+    i
+  ] = `http://${core.dConfig["NODE_TRANSCODER"].server.host}:8088/api/video/` +
+    contentId[i];
+}
 
+for (let i = 0; i < contentId.length; i++) {
+  console.log(contentId[0]);
+}
 
 function function1() {
-     for(let i = 0; i < contentId.length; i++){
-        request.post(destTranscoderAlarm[i]);
-     }
+  for (let i = 0; i < contentId.length; i++) {
+    request.post(destTranscoderAlarm[i]);
+  }
 }
 
 function function2() {
-    // all the stuff you want to happen after that pause
-    for(let i = 0; i < contentId.length; i++){
-    var req = request(`http://${webcamAddr[i]}:${webcamPort}/video`).pipe(request.post(destTranscoder[i]));
-    }
+    for (let i = 0; i < contentId.length; i++) {
+        request.get(`http://${webcamAddr[i]}:${webcamPort}/video`).pipe(request.post(destTranscoder[i]));
+    };
 }
+
+//var interval = setInterval(function2, 1000);
+//clearInterval(interval);
+
+
+//setInterval(function2, 10000);
+
 
 // call the first chunk of code right away
 function1();
 
 // call the rest of the code and have it execute after 1 seconds
 setTimeout(function2, 1000);
+//setInterval(function2, 100000);
 
 
 
+ // all the stuff you want to happen after that pause
+ // var date = new Date();
 
+  //var sec = date.getSeconds();
+  //sec = (sec < 10 ? "0" : "") + sec;
+
+  //while (sec)
+
+
+    //   for (let i = 0; i < contentId.length; i++) {
+    //     (function(i) {
+    //       setInterval(
+    //         function() {
+    //           request(`http://${webcamAddr[i]}:${webcamPort}/video`).pipe(request.post(destTranscoder[i])).end;
+    //         },
+    //         5000
+    //       );
+    //     })(i);
+    //   }
+    // }
+
+
+        
+
+
+
+    //   for (let i = 0; i < contentId.length; i++) {
+    //     (function(i) {
+    //       setInterval(
+    //         function() {
+    //           request(`http://${webcamAddr[i]}:${webcamPort}/video`).pipe(request.post(destTranscoder[i]));
+    //         },
+    //         60000
+    //       );
+    //     })(i);
+    //   }
+    // }
