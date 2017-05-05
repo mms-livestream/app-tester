@@ -13,7 +13,7 @@ let app = express();
 let server = app.listen(2500, "0.0.0.0"); //entry port
 server.setTimeout = 100000000;
 
-let webcamAddr = ["192.168.0.25"];
+let webcamAddr = ["192.168.2.118"];
 let webcamPort = 8080;
 let contentId = ["1"];
 let destTranscoder = [
@@ -27,21 +27,22 @@ let destTranscoderAlarm = {};
 //Metadata to Manager
 
 //Options
-let destHost = core.dConfig["NODE_METADATA_MANAGER"].server.host; //jshint ignore:line
+//let destHost = core.dConfig["NODE_METADATA_MANAGER"].server.host; //jshint ignore:line
+let destHost = "192.168.2.130";  // need to modify in the core app system the dest
 let destPort = core.dConfig["NODE_METADATA_MANAGER"].server.port; //jshint ignore:line
-// let data = {"data": {"id_uploader":1, "title":"TestVideo", "tags":["test", "enseirb"]}};
-// let options = {
-//   url: `http://${destHost}:${destPort}/api/metadata`,
-//   method: 'POST',
-//   json: true,
-//   headers: {
-//       'Content-Type': 'application/json'
-//   },
-//   body: data
-// };
+let data = {"data": {"id_uploader":1, "title":"TestVideo", "tags":["test", "enseirb"]}};
+let options = {
+  url: `http://${destHost}:${destPort}/api/metadata`,
+  method: 'POST',
+  json: true,
+  headers: {
+      'Content-Type': 'application/json'
+  },
+  body: data
+};
 
 //Do request
-/*
+
 request(options, function(err, res) {
     if (!err && res.statusCode === 200) {
         console.log("OK sent");
@@ -49,9 +50,10 @@ request(options, function(err, res) {
     else {
         console.log("Error:" + err);
     }
+});
 
 //Video to Transcoder
-
+/*
 //Options
 let destTranscoder = `http://${core.dConfig["NODE_TRANSCODER"].server.host}:${core.dConfig["NODE_TRANSCODER"].server.port}/api/video`;     //jshint ignore:line
 
@@ -88,12 +90,6 @@ function function2() {
     };
 }
 
-//var interval = setInterval(function2, 1000);
-//clearInterval(interval);
-
-
-//setInterval(function2, 10000);
-
 
 // call the first chunk of code right away
 function1();
@@ -103,41 +99,3 @@ setTimeout(function2, 1000);
 //setInterval(function2, 100000);
 
 
-
- // all the stuff you want to happen after that pause
- // var date = new Date();
-
-  //var sec = date.getSeconds();
-  //sec = (sec < 10 ? "0" : "") + sec;
-
-  //while (sec)
-
-
-    //   for (let i = 0; i < contentId.length; i++) {
-    //     (function(i) {
-    //       setInterval(
-    //         function() {
-    //           request(`http://${webcamAddr[i]}:${webcamPort}/video`).pipe(request.post(destTranscoder[i])).end;
-    //         },
-    //         5000
-    //       );
-    //     })(i);
-    //   }
-    // }
-
-
-        
-
-
-
-    //   for (let i = 0; i < contentId.length; i++) {
-    //     (function(i) {
-    //       setInterval(
-    //         function() {
-    //           request(`http://${webcamAddr[i]}:${webcamPort}/video`).pipe(request.post(destTranscoder[i]));
-    //         },
-    //         60000
-    //       );
-    //     })(i);
-    //   }
-    // }
