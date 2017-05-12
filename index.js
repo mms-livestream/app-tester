@@ -28,9 +28,9 @@ let destTranscoderAlarm = {};
 
 //Options
 //let destHost = core.dConfig["NODE_METADATA_MANAGER"].server.host; //jshint ignore:line
-let destHost = "192.168.2.130";  // need to modify in the core app system the dest
+let destHost = core.dConfig["NODE_METADATA_MANAGER"].server.host;  // need to modify in the core app system the dest
 let destPort = core.dConfig["NODE_METADATA_MANAGER"].server.port; //jshint ignore:line
-let data = {"data": {"id_uploader":1, "title":"TestVideo", "tags":["test", "enseirb"]}};
+let data = {"data": {"id_uploader": 1, "title":"TestVideo", "tags":["test", "enseirb"]}};
 let options = {
   url: `http://${destHost}:${destPort}/api/metadata`,
   method: 'POST',
@@ -40,6 +40,7 @@ let options = {
   },
   body: data
 };
+
 
 //Do request
 
@@ -51,19 +52,6 @@ request(options, function(err, res) {
         console.log("Error:" + err);
     }
 });
-
-//Video to Transcoder
-/*
-//Options
-let destTranscoder = `http://${core.dConfig["NODE_TRANSCODER"].server.host}:${core.dConfig["NODE_TRANSCODER"].server.port}/api/video`;     //jshint ignore:line
-
-//Do request
-request(`http://${webcamAddr}:${webcamPort}/video`).pipe(request.post(destTranscoder));
-
-
-});*/
-
-//Options
 
 
 
