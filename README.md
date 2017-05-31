@@ -1,5 +1,6 @@
 # live-app-tester
-Connector tester for 3rd party app ip webcam, replaced when client app developed
+Connector tester for 3rd party app ipwebcam
+https://play.google.com/store/apps/details?id=com.pas.webcam&hl=fr
 
 main code in index.js
 change the addr for using ipwebcam
